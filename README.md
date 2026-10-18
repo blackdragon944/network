@@ -106,3 +106,44 @@ Spusťte skript s názvem ```run_local_test.sh```.
 ### Pro uživatele systému Windows:
 Spusťte skript s názvem ```run_local_test.bat```.
 
+
+---
+
+## Solution / How to run
+
+Build (produces `app/build/libs/app.jar`):
+
+```bash
+./gradlew build          # Windows: gradlew.bat build
+```
+
+Run the client with the server IP address and port:
+
+```bash
+java -jar app/build/libs/app.jar <host> <port>
+# e.g. against netcat: nc -lv 127.0.0.1 9999
+java -jar app/build/libs/app.jar 127.0.0.1 9999
+```
+
+- Every line typed on standard input is sent to the server after pressing ENTER (encoded as UTF-8, terminated by `\r\n`).
+- Everything the server sends is printed unchanged to standard output.
+- Type `/QUIT` (or close standard input, e.g. Ctrl+D / Ctrl+Z) to disconnect and exit. The client also exits when the server closes the connection.
+- Status and error messages (unknown host, connection refused, connection lost, invalid arguments) go to standard error, so standard output contains only data from the server.
+
+Structure (`app/src/main/java/utb/fai`):
+
+| Class | Responsibility |
+| ----- | -------------- |
+| `App` | Parses and validates `args[0]` (host) and `args[1]` (port), reports connection errors. |
+| `TelnetClient` | Opens the socket and runs the receiving and sending threads until the session ends. |
+| `SocketReceiver` | Receiving thread: polls the socket with `InputStream.available()` and `Thread.sleep(20)`, writes data to `System.out`, detects when the server closes the connection. |
+| `ConsoleSender` | Sending thread: reads lines from `System.in`, sends them to the socket, handles `/QUIT`. |
+
+Manual tests with NATT virtual servers (start the client against the port the server listens on):
+
+```bash
+java -jar NATT.jar --host telnet-server-echo --gui
+java -jar NATT.jar --host telnet-server-broadcast --gui   # connect two clients
+```
+
+Automated evaluation: `./run_local_test.sh` (Linux) or `run_local_test.bat` (Windows), report in `test_report.html`.
