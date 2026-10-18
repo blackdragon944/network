@@ -5,11 +5,6 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
-/**
- * Entry point of the telnet client.
- *
- * <p>Usage: {@code java -jar app.jar <host> <port>}
- */
 public class App {
 
     public static void main(String[] args) {
@@ -33,7 +28,6 @@ public class App {
         }
     }
 
-    /** Parses and validates the port argument, exiting with an error message if it is invalid. */
     private static int parsePort(String value) {
         try {
             int port = Integer.parseInt(value);
@@ -41,10 +35,9 @@ public class App {
                 return port;
             }
         } catch (NumberFormatException ignored) {
-            // falls through to the error below
         }
         exitWithError("Invalid port: " + value + " (expected a number between 1 and 65535)");
-        return -1; // unreachable
+        return -1;
     }
 
     private static void exitWithError(String message) {

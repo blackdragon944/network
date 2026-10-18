@@ -8,10 +8,6 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Reads lines from standard input and sends each one to the socket when the user
- * presses ENTER. Typing {@code /QUIT} or closing standard input ends the session.
- */
 class ConsoleSender implements Runnable {
 
     private static final String QUIT_COMMAND = "/QUIT";
