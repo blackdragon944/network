@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [cv2]
+        project: [cv2, cv3]
     defaults:
       run:
         working-directory: ${{ matrix.project }}
